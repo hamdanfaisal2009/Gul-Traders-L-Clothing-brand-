@@ -1,6 +1,13 @@
-const products = [
-  {id:1, name:"Embroidered Lawn 3-Piece", cat:"lawn", price:2800, oldPrice:4200, badge:"sale", rating:4.8, reviews:124,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+const products = [{
+        id: 1,
+        name: "Embroidered Lawn 3-Piece",
+        cat: "lawn",
+        price: 2800,
+        oldPrice: 4200,
+        badge: "sale",
+        rating: 4.8,
+        reviews: 124,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#f0ebe4"/>
      <ellipse cx="100" cy="40" rx="18" ry="22" fill="#FDBF8A"/>
      <path d="M82 38 Q84 20 100 16 Q116 20 118 38 Q122 32 120 46 Q114 36 100 38 Q86 36 80 46 Q78 32 82 38Z" fill="#8B5E3C"/>
@@ -11,9 +18,18 @@ const products = [
      <path d="M70 76 L46 128 Q52 132 58 128 L74 86Z" fill="#7FADC8"/>
      <path d="M130 76 L154 128 Q148 132 142 128 L126 86Z" fill="#7FADC8"/>
      <path d="M64 158 L72 240 Q84 244 92 240 L100 172 L108 240 Q116 244 128 240 L136 158Z" fill="#e8e4e0"/>
-   </svg>`},
-  {id:2, name:"Bridal Chiffon Suit", cat:"bridal", price:8500, oldPrice:12000, badge:"popular", rating:5.0, reviews:89,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+   </svg>`
+    },
+    {
+        id: 2,
+        name: "Bridal Chiffon Suit",
+        cat: "bridal",
+        price: 8500,
+        oldPrice: 12000,
+        badge: "popular",
+        rating: 5.0,
+        reviews: 89,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#fdf5e6"/>
      <ellipse cx="100" cy="38" rx="18" ry="22" fill="#e8c97a"/>
      <path d="M82 35 Q84 18 100 14 Q116 18 118 35 Q122 28 120 44 Q112 34 100 36 Q88 34 80 44 Q78 28 82 35Z" fill="#5C3D2E"/>
@@ -26,9 +42,18 @@ const products = [
      <path d="M68 73 L40 135 Q46 140 54 136 L72 84Z" fill="#c9a84c" opacity="0.85"/>
      <path d="M132 73 L160 135 Q154 140 146 136 L128 84Z" fill="#c9a84c" opacity="0.85"/>
      <path d="M58 168 L46 245 Q64 252 80 248 L100 180 L120 248 Q136 252 154 245 L142 168Z" fill="#e8d5a0" opacity="0.8"/>
-   </svg>`},
-  {id:3, name:"Casual Kurta Shalwar", cat:"kurta", price:1400, oldPrice:null, badge:"new", rating:4.6, reviews:201,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+   </svg>`
+    },
+    {
+        id: 3,
+        name: "Casual Kurta Shalwar",
+        cat: "kurta",
+        price: 1400,
+        oldPrice: null,
+        badge: "new",
+        rating: 4.6,
+        reviews: 201,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#eef2f7"/>
      <ellipse cx="100" cy="40" rx="18" ry="22" fill="#FDBF8A"/>
      <path d="M82 38 Q84 20 100 16 Q116 20 118 38 Q122 30 118 46 Q112 36 100 38 Q88 36 82 46 Q78 30 82 38Z" fill="#4A3728"/>
@@ -39,9 +64,18 @@ const products = [
      <path d="M72 75 L48 128 Q54 132 60 128 L76 85Z" fill="#142E53"/>
      <path d="M128 75 L152 128 Q146 132 140 128 L124 85Z" fill="#142E53"/>
      <path d="M66 163 L74 245 Q88 248 96 244 L100 174 L104 244 Q112 248 126 245 L134 163Z" fill="#c9d6e8"/>
-   </svg>`},
-  {id:4, name:"Kids Festive Dress", cat:"kids", price:1800, oldPrice:2500, badge:"sale", rating:4.9, reviews:67,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+   </svg>`
+    },
+    {
+        id: 4,
+        name: "Kids Festive Dress",
+        cat: "kids",
+        price: 1800,
+        oldPrice: 2500,
+        badge: "sale",
+        rating: 4.9,
+        reviews: 67,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#fef9f0"/>
      <ellipse cx="100" cy="44" rx="16" ry="19" fill="#FDBF8A"/>
      <path d="M84 42 Q86 26 100 22 Q114 26 116 42 Q120 36 117 50 Q111 40 100 42 Q89 40 83 50 Q80 36 84 42Z" fill="#8B5E3C"/>
@@ -52,9 +86,18 @@ const products = [
      <path d="M76 118 Q100 115 124 118 L132 210 Q100 218 68 210Z" fill="#FFB3C6"/>
      <circle cx="100" cy="90" r="5" fill="rgba(255,255,255,0.6)"/>
      <path d="M88 90 Q100 96 112 90" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" fill="none"/>
-   </svg>`},
-  {id:5, name:"Khaddar Winter Suit", cat:"kurta", price:3200, oldPrice:4000, badge:null, rating:4.7, reviews:145,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+   </svg>`
+    },
+    {
+        id: 5,
+        name: "Khaddar Winter Suit",
+        cat: "kurta",
+        price: 3200,
+        oldPrice: 4000,
+        badge: null,
+        rating: 4.7,
+        reviews: 145,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#f2ede8"/>
      <ellipse cx="100" cy="40" rx="18" ry="22" fill="#e8c97a"/>
      <path d="M82 37 Q84 20 100 16 Q116 20 118 37 Q122 30 118 46 Q112 36 100 38 Q88 36 82 46 Q78 30 82 37Z" fill="#5C3D2E"/>
@@ -65,9 +108,18 @@ const products = [
      <path d="M68 75 L42 135 Q48 140 56 136 L72 86Z" fill="#8B5E3C"/>
      <path d="M132 75 L158 135 Q152 140 144 136 L128 86Z" fill="#8B5E3C"/>
      <path d="M62 166 L70 248 Q86 252 96 247 L100 178 L104 247 Q114 252 130 248 L138 166Z" fill="#c4a882"/>
-   </svg>`},
-  {id:6, name:"Western Printed Top", cat:"western", price:1100, oldPrice:1600, badge:"new", rating:4.5, reviews:92,
-   svg:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+   </svg>`
+    },
+    {
+        id: 6,
+        name: "Western Printed Top",
+        cat: "western",
+        price: 1100,
+        oldPrice: 1600,
+        badge: "new",
+        rating: 4.5,
+        reviews: 92,
+        svg: `<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
      <rect width="200" height="260" fill="#f0f4f0"/>
      <ellipse cx="100" cy="40" rx="18" ry="22" fill="#FDBF8A"/>
      <path d="M82 38 Q84 20 100 16 Q116 20 118 38 Q122 30 118 46 Q112 36 100 38 Q88 36 82 46 Q78 30 82 38Z" fill="#2C3E50"/>
@@ -79,7 +131,8 @@ const products = [
      <circle cx="100" cy="110" r="4" fill="rgba(255,255,255,0.25)"/>
      <circle cx="115" cy="98" r="5" fill="rgba(255,255,255,0.3)"/>
      <path d="M76 158 L80 240 Q96 244 100 240 L104 240 Q108 244 120 240 L124 158Z" fill="#1a5c36" opacity="0.8"/>
-   </svg>`},
+   </svg>`
+    },
 ];
 
 // Cart state
@@ -87,9 +140,9 @@ let cart = [];
 
 // Render products
 function renderProducts(filter = 'all') {
-  const grid = document.getElementById('productsGrid');
-  const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
-  grid.innerHTML = filtered.map(p => `
+    const grid = document.getElementById('productsGrid');
+    const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+    grid.innerHTML = filtered.map(p => `
     <div class="product-card" data-cat="${p.cat}">
       <div class="product-card-img">
         ${p.svg}
