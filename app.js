@@ -36,7 +36,7 @@ const products = [
       { name: "Blush Pink", hex: "#D9A6A0" },
       { name: "Emerald Green", hex: "#1F6E54" },
     ],
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRESfcLbomTa85c4hKQp3CM-szmzGZsC85xnA&s",
+    img: "https://images.unsplash.com/photo-1610276347233-2ab70fc71da8?q=80&w=800&auto=format&fit=crop",
     imgPos: "center 80%",
   },
   {
@@ -56,7 +56,7 @@ const products = [
       { name: "Olive Green", hex: "#5B6B3E" },
       { name: "Black", hex: "#1A1A1A" },
     ],
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBIe9cXKKjuzQ_US0_zXB1ZB0N9UOAF-rHv68DE13icvQE5J_Y3aCH-U0&s",
+    img: "https://images.unsplash.com/photo-1576828831022-ca41d3905fb7?q=80&w=800&auto=format&fit=crop",
     imgPos: "center 55%",
   },
   {
@@ -76,7 +76,7 @@ const products = [
       { name: "Peach", hex: "#F2C9A1" },
       { name: "Mint Green", hex: "#A8D9C4" },
     ],
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuwYprB_P-uFWA9Rh0Dkh00h0riIVBPtdbVPBcSY7iYQ&s",
+    img: "https://images.unsplash.com/photo-1603983616455-cf2df3a547ca?q=80&w=800&auto=format&fit=crop",
     imgPos: "center 85%",
   },
   {
@@ -135,7 +135,7 @@ function loadCart() {
 function saveCart() {
   try {
     localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
-  } catch (e) {}
+  } catch (e) { }
 }
 function loadWishlist() {
   try {
@@ -147,7 +147,7 @@ function loadWishlist() {
 function saveWishlist() {
   try {
     localStorage.setItem(STORAGE_WISHLIST, JSON.stringify(wishlist));
-  } catch (e) {}
+  } catch (e) { }
 }
 
 // Cart / Wishlist state (persisted in this browser only, cleared after checkout)
@@ -498,7 +498,7 @@ function openQuickView(id) {
   qvQty = 1;
 
   document.getElementById("qvMedia").innerHTML =
-    `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;object-position:${p.imgPos || "center"}">`;
+    `<img src="${p.img}" alt="${p.name}" title="Click to enlarge" style="width:100%;height:100%;object-fit:cover;object-position:${p.imgPos || "center"};cursor:zoom-in" onclick="event.stopPropagation(); openLightbox('${p.img}')">`;
   document.getElementById("qvCat").textContent =
     p.cat.charAt(0).toUpperCase() + p.cat.slice(1);
   document.getElementById("qvName").textContent = p.name;
@@ -601,15 +601,13 @@ function closeMobileOnBg(e) {
 
 // ===== LIVE SEARCH =====
 function openSearch() {
-  document.body.classList.add("search-active");
+  document.getElementById("products").scrollIntoView({ behavior: "smooth" });
   const overlay = document.getElementById("searchOverlay");
   overlay.classList.add("open");
-  document.getElementById("products").scrollIntoView({ behavior: "smooth" });
   setTimeout(() => document.getElementById("searchInput").focus(), 350);
 }
 
 function closeSearch() {
-  document.body.classList.remove("search-active");
   document.getElementById("searchOverlay").classList.remove("open");
   const input = document.getElementById("searchInput");
   input.value = "";
@@ -627,7 +625,10 @@ function liveSearch(value) {
 }
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && document.body.classList.contains("search-active")) {
+  if (
+    e.key === "Escape" &&
+    document.getElementById("searchOverlay").classList.contains("open")
+  ) {
     closeSearch();
   }
 });
@@ -730,3 +731,138 @@ window.addEventListener("load", function () {
     }
   }, 160);
 });
+
+// ===== SCROLL LOCK: page scroll stops while a panel/modal is open =====
+function syncScrollLock() {
+  const open = document.querySelector(
+    ".cart-sidebar.open, .checkout-info-modal.open, .qv-overlay.open, .img-lightbox.open",
+  );
+  document.body.style.overflow = open ? "hidden" : "";
+}
+["openCart", "closeCart", "openWishlist", "closeWishlist", "openCheckoutInfo", "closeCheckoutInfo", "openQuickView", "closeQuickView"].forEach((name) => {
+  const orig = window[name];
+  if (typeof orig !== "function") return;
+  window[name] = function (...args) {
+    const result = orig.apply(this, args);
+    syncScrollLock();
+    return result;
+  };
+});
+
+// ===== IMAGE LIGHTBOX =====
+function openLightbox(src) {
+  document.getElementById("imgLightboxImg").src = src;
+  document.getElementById("imgLightbox").classList.add("open");
+  syncScrollLock();
+}
+function closeLightbox() {
+  document.getElementById("imgLightbox").classList.remove("open");
+  syncScrollLock();
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && document.getElementById("imgLightbox").classList.contains("open")) {
+    closeLightbox();
+  }
+});
+
+// ===== SCROLL REVEAL (fade up / left-right), skipped when reduced motion is on =====
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const revealObserver = "IntersectionObserver" in window && !reduceMotion
+  ? new IntersectionObserver(
+    (entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) {
+          en.target.classList.add("is-in");
+          revealObserver.unobserve(en.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+  )
+  : null;
+
+function applyReveal(selector, dir, stagger) {
+  if (!revealObserver) return;
+  document.querySelectorAll(selector).forEach((el, i) => {
+    if (el.dataset.rv) return;
+    el.dataset.rv = "1";
+    const d = dir === "alt" ? (i % 2 === 0 ? "from-left" : "from-right") : dir;
+    el.classList.add("js-reveal", d);
+    if (stagger) el.style.transitionDelay = (i % 3) * 90 + "ms";
+    el.addEventListener(
+      "transitionend",
+      () => {
+        el.classList.remove("js-reveal", d, "is-in");
+        el.style.transitionDelay = "";
+      },
+      { once: true },
+    );
+    revealObserver.observe(el);
+  });
+}
+
+function setupReveal() {
+  applyReveal("#categories .section-header", "up");
+  applyReveal("#categories .cat-card", "up", true);
+  applyReveal("#products .section-header", "up");
+  applyReveal("#about .about-visual", "from-left");
+  applyReveal("#about .about-content", "from-right");
+  applyReveal("#facilities .section-header", "up");
+  applyReveal("#deals .section-header", "up");
+  applyReveal("#deals .deal-card", "alt", true);
+  applyReveal("#reviews .section-header", "up");
+  applyReveal("#reviews .review-card", "up", true);
+  applyReveal("#productsGrid .product-card", "alt");
+}
+
+// Product grid re-renders on search/filter, so tag the new cards too
+const _renderProductsOrig = window.renderProducts;
+window.renderProducts = function (...args) {
+  const result = _renderProductsOrig.apply(this, args);
+  applyReveal("#productsGrid .product-card", "alt");
+  updateAutoHover();
+  return result;
+};
+
+setupReveal();
+
+// ===== AUTO-HOVER on touch devices =====
+// Only the middle cards among those visible on screen get the hover look:
+// 1 or 2 visible -> the first one; 3 -> middle + last; 4+ -> skip the first and last.
+const touchDevice = window.matchMedia("(hover: none)").matches;
+let autoHoverFrame = 0;
+
+function pickAutoHoverIndexes(n) {
+  if (n <= 0) return [];
+  if (n <= 2) return [0];
+  if (n === 3) return [1, 2];
+  const picks = [];
+  for (let i = 1; i <= n - 2; i++) picks.push(i);
+  return picks;
+}
+
+function updateAutoHover() {
+  if (!touchDevice) return;
+  const cards = [...document.querySelectorAll("#productsGrid .product-card")];
+  cards.forEach((c) => c.classList.remove("auto-hover"));
+  const visible = cards
+    .map((el) => ({ el, r: el.getBoundingClientRect() }))
+    .filter((o) => o.r.height > 0 && o.r.bottom > 0 && o.r.top < window.innerHeight)
+    .sort((a, b) => (Math.abs(a.r.top - b.r.top) < 40 ? a.r.left - b.r.left : a.r.top - b.r.top))
+    .map((o) => o.el);
+  pickAutoHoverIndexes(visible.length).forEach((i) => visible[i].classList.add("auto-hover"));
+}
+
+function scheduleAutoHover() {
+  if (autoHoverFrame) return;
+  autoHoverFrame = requestAnimationFrame(() => {
+    autoHoverFrame = 0;
+    updateAutoHover();
+  });
+}
+
+if (touchDevice) {
+  window.addEventListener("scroll", scheduleAutoHover, { passive: true });
+  window.addEventListener("resize", scheduleAutoHover);
+  updateAutoHover();
+}
