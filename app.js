@@ -135,7 +135,7 @@ function loadCart() {
 function saveCart() {
   try {
     localStorage.setItem(STORAGE_CART, JSON.stringify(cart));
-  } catch (e) { }
+  } catch (e) {}
 }
 function loadWishlist() {
   try {
@@ -147,7 +147,7 @@ function loadWishlist() {
 function saveWishlist() {
   try {
     localStorage.setItem(STORAGE_WISHLIST, JSON.stringify(wishlist));
-  } catch (e) { }
+  } catch (e) {}
 }
 
 // Cart / Wishlist state (persisted in this browser only, cleared after checkout)
@@ -769,16 +769,22 @@ document.addEventListener("keydown", (e) => {
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const revealObserver = "IntersectionObserver" in window && !reduceMotion
   ? new IntersectionObserver(
-    (entries) => {
-      entries.forEach((en) => {
-        if (en.isIntersecting) {
-          en.target.classList.add("is-in");
-          revealObserver.unobserve(en.target);
-        }
-      });
-    },
-    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
-  )
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            const el = en.target;
+            el.classList.add("is-in");
+            revealObserver.unobserve(el);
+            // Clean up after the animation so hover/transform styles are not overridden later
+            setTimeout(() => {
+              el.classList.remove("js-reveal", "up", "from-left", "from-right", "is-in");
+              el.style.transitionDelay = "";
+            }, 1100);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    )
   : null;
 
 function applyReveal(selector, dir, stagger) {
@@ -789,14 +795,6 @@ function applyReveal(selector, dir, stagger) {
     const d = dir === "alt" ? (i % 2 === 0 ? "from-left" : "from-right") : dir;
     el.classList.add("js-reveal", d);
     if (stagger) el.style.transitionDelay = (i % 3) * 90 + "ms";
-    el.addEventListener(
-      "transitionend",
-      () => {
-        el.classList.remove("js-reveal", d, "is-in");
-        el.style.transitionDelay = "";
-      },
-      { once: true },
-    );
     revealObserver.observe(el);
   });
 }
@@ -841,16 +839,22 @@ function pickAutoHoverIndexes(n) {
   return picks;
 }
 
+// Very thin horizontal band across the middle of the screen (not visible to the user).
+// Only cards whose box crosses this band are candidates for auto-hover.
 function updateAutoHover() {
   if (!touchDevice) return;
   const cards = [...document.querySelectorAll("#productsGrid .product-card")];
   cards.forEach((c) => c.classList.remove("auto-hover"));
-  const visible = cards
+  const mid = window.innerHeight / 2;
+  const half = Math.max(6, window.innerHeight * 0.012);
+  const bandTop = mid - half;
+  const bandBottom = mid + half;
+  const inBand = cards
     .map((el) => ({ el, r: el.getBoundingClientRect() }))
-    .filter((o) => o.r.height > 0 && o.r.bottom > 0 && o.r.top < window.innerHeight)
+    .filter((o) => o.r.height > 0 && o.r.top <= bandBottom && o.r.bottom >= bandTop)
     .sort((a, b) => (Math.abs(a.r.top - b.r.top) < 40 ? a.r.left - b.r.left : a.r.top - b.r.top))
     .map((o) => o.el);
-  pickAutoHoverIndexes(visible.length).forEach((i) => visible[i].classList.add("auto-hover"));
+  pickAutoHoverIndexes(inBand.length).forEach((i) => inBand[i].classList.add("auto-hover"));
 }
 
 function scheduleAutoHover() {

@@ -55,8 +55,8 @@ nav {
 
 .nav-logo img {
   backdrop-filter: blur(15px);
-  width: 120px;
-  /* height: 60px; */
+  width: 130px;
+  height: 70px;
   background-color: var(--bg-soft);
   margin-top: 15px;
   border-radius: 20px;
@@ -417,7 +417,7 @@ nav {
 
 .hero-stats {
   display: flex;
-  gap: 30px;
+  gap: 36px;
   margin-top: 48px;
 }
 
@@ -1035,6 +1035,26 @@ nav {
   background: var(--brand-light);
   transform: scale(1.05);
 }
+
+
+.load-more-btn{
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  padding: 5px 16px;
+  margin: 20% 40%;
+  border-radius: 100px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: "Playfair Display", serif;
+}
+
+.load-more-btn:hover{
+  background: var(--brand-light);
+  transform: scale(1.05);
+}
 /* ===== ABOUT SECTION ===== */
 
 #about {
@@ -1294,7 +1314,7 @@ nav {
 
 .deal-tag {
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 20px;
   background: var(--accent);
   color: var(--brand);
@@ -2529,24 +2549,27 @@ footer {
    ===================================================================== */
 
 /* ----- Scroll reveal (applied by app.js only when motion is allowed) ----- */
+/* Hidden state has NO transition, so it never plays before the element is on screen.
+   The transition only runs once .is-in is added by the observer. */
 .js-reveal {
   opacity: 0;
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: none;
 }
 .js-reveal.up {
-  transform: translateY(36px);
+  transform: translateY(28px);
 }
 .js-reveal.from-left {
-  transform: translateX(-60px);
+  transform: translateX(-36px);
 }
 .js-reveal.from-right {
-  transform: translateX(60px);
+  transform: translateX(36px);
 }
 .js-reveal.is-in {
   opacity: 1;
   transform: none;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2660,8 +2683,8 @@ footer {
     display: none;
   }
   .nav-logo img {
-    width: 90px;
-    /* height: 52px; */
+    width: 96px;
+    height: 52px;
   }
 }
 
@@ -2700,5 +2723,85 @@ footer {
     flex-direction: column;
     text-align: center;
     gap: 10px;
+  }
+}
+
+/* ===== 350px+ SAFETY (no sideways overflow, navbar fits) ===== */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+.hero-strip {
+  overflow: hidden;
+}
+.product-card,
+.hero-content,
+.hero-stats,
+.hero-stat {
+  min-width: 0;
+}
+
+@media (max-width: 400px) {
+  nav {
+    padding: 0 10px;
+  }
+  .nav-right {
+    gap: 6px;
+  }
+  .nav-icon-btn,
+  .hamburger {
+    width: 36px;
+    height: 36px;
+  }
+  .nav-logo img {
+    width: 80px;
+    height: 44px;
+  }
+  #hero {
+    padding: 96px 16px 40px;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 10px;
+  }
+  .hero-stat strong {
+    font-size: 1.25rem;
+  }
+  .products-grid {
+    gap: 10px;
+  }
+}
+
+/* ===== Fixes found at 350px ===== */
+/* Closed side menu must not leak its shadow into the screen edge */
+.mobile-menu-panel {
+  box-shadow: none;
+}
+.mobile-overlay.open .mobile-menu-panel {
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Newsletter: input + button never overflow on small phones */
+.newsletter-form input {
+  min-width: 0;
+}
+@media (max-width: 480px) {
+  .newsletter-form {
+    flex-direction: column;
+  }
+  .newsletter-form button {
+    width: 100%;
+  }
+}
+
+/* Footer columns: heading and links start on the same left line on tablet/phone */
+@media (max-width: 900px) {
+  .footer-col h4 {
+    margin-left: 0;
+  }
+  .footer-col ul {
+    padding-left: 0;
   }
 }
